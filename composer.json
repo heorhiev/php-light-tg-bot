@@ -1,0 +1,32 @@
+{
+    "name": "heorhiev/php-light-tg-bot",
+    "authors": [
+        {
+            "name": "Ruslan",
+            "email": ""
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=7.2",
+        "telegram-bot/api": "^2.4",
+        "heorhiev/php-light-app": "dev-master"
+    },
+    "require-dev": {
+        "ext-sqlite3": "*"
+    },
+    "extra": {
+        "bootstrap": "heorhiev\\php-app-bot\\src\\Bootstrap"
+    },
+    "autoload": {
+        "psr-4": {
+            "light\\tg\bot\\": "src"
+        }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/heorhiev/php-light-app.git"
+        }
+    ]
+}
