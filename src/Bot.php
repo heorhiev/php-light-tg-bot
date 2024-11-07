@@ -3,8 +3,7 @@
 namespace light\tg\bot;
 
 use light\tg\bot\config\TelegramDto;
-use app\toolkit\services\SettingsService;
-use app\toolkit\services\http\RequestService;
+use light\app\services\SettingsService;
 use light\tg\bot\models\{IncomeMessage, Message};
 use TelegramBot\Api\{BotApi, Types\Update};
 
@@ -27,7 +26,7 @@ abstract class Bot
         $this->_botApi = new BotApi($this->_options->token);
 
         if (!$data) {
-            $data = BotApi::jsonValidate(RequestService::raw(), true);
+            $data = BotApi::jsonValidate(file_get_contents('php://input'), true);
         }
 
         $this->_dataFromRequest = Update::fromResponse($data);
