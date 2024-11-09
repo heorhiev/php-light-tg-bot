@@ -97,7 +97,7 @@ class Message
         $content = $this->_messageText;
 
         if (!$content) {
-            $path = AliasService::getAlias($this->_options->viewDirectory . '/' . $this->_messageView);
+            $path = AliasService::getPath($this->_options->viewDirectory . '/' . $this->_messageView);
 
             if ($this->_lang) {
                 $langPath = $path . '.' . $this->_lang;
