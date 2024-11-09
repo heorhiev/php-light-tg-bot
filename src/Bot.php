@@ -19,22 +19,22 @@ abstract class Bot
     abstract public static function getCommands(): array;
 
 
-    public function __construct(string $configFile, $data = null)
+    public function __construct(string $configFile)
     {
         /** @var TelegramDto $options */
         $this->_options = SettingsService::load($configFile, TelegramDto::class);
         $this->_botApi = new BotApi($this->_options->token);
+    }
 
+
+    public function run($data = null): void
+    {
         if (!$data) {
             $data = BotApi::jsonValidate(file_get_contents('php://input'), true);
         }
 
         $this->_dataFromRequest = Update::fromResponse($data);
-    }
 
-
-    public function run(): void
-    {
         $class = $this->getCommandHandler($this->getIncomeMessage()->getCommand());
 
         if (!$class) {
