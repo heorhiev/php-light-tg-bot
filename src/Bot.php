@@ -2,6 +2,7 @@
 
 namespace light\tg\bot;
 
+use light\tg\bot\config\MenuDto;
 use light\tg\bot\config\TelegramDto;
 use light\app\services\SettingsService;
 use light\tg\bot\models\{IncomeMessage, Message};
@@ -41,11 +42,11 @@ abstract class Bot
             $class = $this->getTextHandler($this->getIncomeMessage()->getText());
         }
 
-        if ($class) {
-            $this->storeCommand($class);
-        } else {
-            $class = $this->getStoredCommand();
-        }
+//        if ($class) {
+//            $this->storeCommand($class);
+//        } else {
+//            $class = $this->getStoredCommand();
+//        }
 
         (new $class($this))->run();
     }
@@ -60,9 +61,9 @@ abstract class Bot
 
     public function getTextHandler($text)
     {
-        foreach ($this->getMenu() as $command => $menuText) {
-            if ($text == $menuText) {
-                return $this->getCommandHandler($command);
+        foreach ($this->getMenu() as $command) {
+            if ($text == $command['label']) {
+                return $this->getCommandHandler($command['code']);
             }
         }
     }
@@ -86,9 +87,20 @@ abstract class Bot
     }
 
 
+    /**
+     * @return ?MenuDto[]
+     */
     public function getMenu(): ?array
     {
-        return $this->getOptions()->menu;
+        $items = $this->getOptions()->menu;
+
+        if ($items) {
+            foreach ($items as $item) {
+                $menu[] = new MenuDto($item);
+            }
+        }
+
+        return $menu ?? null;
     }
 
 
