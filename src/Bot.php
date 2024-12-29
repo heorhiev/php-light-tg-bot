@@ -137,7 +137,7 @@ abstract class Bot
     }
 
 
-    public function storeCommand($command): bool
+    public function storeCommand($command, string $data = ''): bool
     {
         return false;
     }
