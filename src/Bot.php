@@ -6,7 +6,8 @@ use light\tg\bot\config\MenuDto;
 use light\tg\bot\config\TelegramDto;
 use light\app\services\SettingsService;
 use light\tg\bot\models\{IncomeMessage, Message};
-use TelegramBot\Api\{BotApi, Types\Update};
+use TelegramBot\Api\BotApi;
+use light\tg\bot\override\TelegramBot\Api\Types\Update;
 
 
 abstract class Bot
@@ -66,8 +67,8 @@ abstract class Bot
     public function getTextHandler($text)
     {
         foreach ($this->getMenu() as $command) {
-            if ($text == $command['label']) {
-                return $this->getCommandHandler($command['code']);
+            if ($text == $command->label) {
+                return $this->getCommandHandler($command->code);
             }
         }
     }

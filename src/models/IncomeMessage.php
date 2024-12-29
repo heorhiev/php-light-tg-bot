@@ -3,6 +3,8 @@
 namespace light\tg\bot\models;
 
 
+use TelegramBot\Api\Types\UsersShared;
+
 class IncomeMessage
 {
     private $id;
@@ -16,7 +18,7 @@ class IncomeMessage
     private $isCallbackQuery;
     private $threadId;
     private $files;
-    private $sharedContact;
+    private $usersShared;
 
 
     public function __construct($update)
@@ -99,20 +101,20 @@ class IncomeMessage
     }
 
 
-    public function getSharedContact()
+    public function getUsersShared(): ?UsersShared
     {
-        return $this->sharedContact;
+        return $this->usersShared;
     }
 
 
-    private function mapMessage(\TelegramBot\Api\Types\Message $message)
+    private function mapMessage(\light\tg\bot\override\TelegramBot\Api\Types\Message $message)
     {
         $this->id = $message->getMessageId();
         $this->chat = $message->getChat();
         $this->from = $message->getFrom();
         $this->text = $message->getText() ? $message->getText() : $message->getCaption();
         $this->threadId = $message->getMessageThreadId();
-        $this->sharedContact = $message->getContact();
+        $this->usersShared = $message->getUsersShared();
 
         if ($message->getDocument()) {
             $this->files[] = $message->getDocument();
