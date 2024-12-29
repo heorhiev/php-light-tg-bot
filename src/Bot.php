@@ -42,11 +42,15 @@ abstract class Bot
             $class = $this->getTextHandler($this->getIncomeMessage()->getText());
         }
 
-//        if ($class) {
-//            $this->storeCommand($class);
-//        } else {
-//            $class = $this->getStoredCommand();
-//        }
+        if (!$class) {
+            $class = $this->getDefaultHandler();
+        }
+
+        if ($class) {
+            $this->storeCommand($class);
+        } else {
+            $class = $this->getStoredCommand();
+        }
 
         (new $class($this))->run();
     }
@@ -66,6 +70,12 @@ abstract class Bot
                 return $this->getCommandHandler($command['code']);
             }
         }
+    }
+
+
+    public function getDefaultHandler()
+    {
+        return null;
     }
 
 

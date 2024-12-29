@@ -16,6 +16,7 @@ class IncomeMessage
     private $isCallbackQuery;
     private $threadId;
     private $files;
+    private $sharedContact;
 
 
     public function __construct($update)
@@ -98,6 +99,12 @@ class IncomeMessage
     }
 
 
+    public function getSharedContact()
+    {
+        return $this->sharedContact;
+    }
+
+
     private function mapMessage(\TelegramBot\Api\Types\Message $message)
     {
         $this->id = $message->getMessageId();
@@ -105,6 +112,7 @@ class IncomeMessage
         $this->from = $message->getFrom();
         $this->text = $message->getText() ? $message->getText() : $message->getCaption();
         $this->threadId = $message->getMessageThreadId();
+        $this->sharedContact = $message->getContact();
 
         if ($message->getDocument()) {
             $this->files[] = $message->getDocument();
@@ -125,8 +133,6 @@ class IncomeMessage
 
         $this->isCallbackQuery = true;
         $this->callbackId = $callbackQuery->getId();
-
-        file_put_contents('/var/www/keycrm/base/api_html/vipcall/runtime/logs/test.txt', print_r($callbackQuery, 1));
     }
 
 
