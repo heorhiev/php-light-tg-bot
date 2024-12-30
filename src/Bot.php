@@ -5,7 +5,7 @@ namespace light\tg\bot;
 use light\tg\bot\config\MenuDto;
 use light\tg\bot\config\TelegramDto;
 use light\app\services\SettingsService;
-use light\tg\bot\models\{IncomeMessage, Message};
+use light\tg\bot\models\{Command, IncomeMessage, Message};
 use TelegramBot\Api\BotApi;
 use light\tg\bot\override\TelegramBot\Api\Types\Update;
 
@@ -18,6 +18,9 @@ abstract class Bot
     private $_incomeMessage;
 
 
+    /**
+     * @return Command[]
+     */
     abstract public static function getCommands(): array;
 
 
@@ -66,11 +69,19 @@ abstract class Bot
 
     public function getTextHandler($text)
     {
-        foreach ($this->getMenu() as $command) {
-            if ($text == $command->label) {
-                return $this->getCommandHandler($command->code);
+        foreach ($this->getMenu() as $menu) {
+            if ($text == $menu->label) {
+                return $this->getCommandHandler($menu->code);
             }
         }
+
+        foreach (static::getCommands() as $command) {
+            if ($text == $command::getTitle()) {
+                return $command;
+            }
+        }
+
+        return null;
     }
 
 
@@ -172,7 +183,7 @@ abstract class Bot
                 $message->getRenderedContent(),
                 'HTML',
                 true,
-                $message->getKeyboard()
+                $message->getKeyboardMarkup()
             );
         } else {
             $this->getBotApi()->sendMessage(

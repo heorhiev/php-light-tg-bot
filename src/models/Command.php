@@ -10,6 +10,7 @@ abstract class Command
 {
     protected $_bot;
 
+    abstract public static function getTitle(): string;
 
     abstract public function run(): void;
 
