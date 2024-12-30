@@ -1,5 +1,6 @@
 {
     "name": "heorhiev/php-light-tg-bot",
+    "version": "dev-master",
     "authors": [
         {
             "name": "Ruslan",
