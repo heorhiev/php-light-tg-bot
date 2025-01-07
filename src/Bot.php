@@ -7,7 +7,7 @@ use light\tg\bot\config\TelegramDto;
 use light\app\services\SettingsService;
 use light\tg\bot\models\{Command, IncomeMessage, Message};
 use TelegramBot\Api\BotApi;
-use light\tg\bot\override\TelegramBot\Api\Types\Update;
+use TelegramBot\Api\Types\Update;
 
 
 abstract class Bot

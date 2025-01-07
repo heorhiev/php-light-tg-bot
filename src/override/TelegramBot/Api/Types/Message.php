@@ -7,7 +7,7 @@ use TelegramBot\Api\Types\UsersShared;
 
 class Message extends \TelegramBot\Api\Types\Message
 {
-    private $userShared;
+    protected $userShared;
 
     public function setUsersShared(UsersShared $data)
     {
