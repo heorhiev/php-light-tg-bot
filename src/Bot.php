@@ -60,14 +60,14 @@ abstract class Bot
     }
 
 
-    public function getCommandHandler($command)
+    public function getCommandHandler($command): ?Command
     {
         $commands = static::getCommands();
         return $commands[$command] ?? null;
     }
 
 
-    public function getTextHandler($text)
+    public function getTextHandler($text): ?Command
     {
         foreach ($this->getMenu() as $menu) {
             if ($text == $menu->label) {
@@ -110,9 +110,9 @@ abstract class Bot
 
 
     /**
-     * @return ?MenuDto[]
+     * @return MenuDto[]
      */
-    public function getMenu(): ?array
+    public function getMenu(): array
     {
         $items = $this->getOptions()->menu;
 
@@ -122,7 +122,7 @@ abstract class Bot
             }
         }
 
-        return $menu ?? null;
+        return $menu ?? [];
     }
 
 
