@@ -101,20 +101,26 @@ class IncomeMessage
     }
 
 
-    public function getUserShared(): ?UserShared
+    /**
+     * @return UserShared|null
+     */
+    public function getUserShared()
     {
         return $this->userShared;
     }
 
 
-    private function mapMessage(\TelegramBot\Api\Types\Message $message)
+    private function mapMessage(\TelegramBot\Api\Types\Message $message): void
     {
         $this->id = $message->getMessageId();
         $this->chat = $message->getChat();
         $this->from = $message->getFrom();
-        $this->text = $message->getText() ? $message->getText() : $message->getCaption();
+        $this->text = $message->getText() ?: $message->getCaption();
         $this->threadId = $message->getMessageThreadId();
-        $this->userShared = $message->getUserShared();
+
+        if (method_exists($message, 'getUserShared')) {
+            $this->userShared = $message->getUserShared();
+        }
 
         if ($message->getDocument()) {
             $this->files[] = $message->getDocument();
@@ -125,7 +131,6 @@ class IncomeMessage
         }
 
         $this->parseCommand($this->text);
-
     }
 
     private function mapCallbackQuery($callbackQuery)
