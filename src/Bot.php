@@ -40,44 +40,43 @@ abstract class Bot
 
         $this->_dataFromRequest = Update::fromResponse($data);
 
-        $class = $this->getCommandHandler($this->getIncomeMessage()->getCommand());
+        $handler = $this->getCommandHandler($this->getIncomeMessage()->getCommand());
 
-        if (!$class) {
-            $class = $this->getTextHandler($this->getIncomeMessage()->getText());
+        if (!$handler) {
+            $handler = $this->getTextHandler($this->getIncomeMessage()->getText());
         }
 
-        if (!$class) {
-            $class = $this->getDefaultHandler();
+        if (!$handler) {
+            $handler = $this->getDefaultHandler();
         }
 
-        if ($class) {
-            $this->storeCommand($class);
+        if ($handler) {
+            $this->storeCommand($handler);
         } else {
-            $class = $this->getStoredCommand();
+            $handler = $this->getStoredCommand();
         }
 
-        (new $class($this))->run();
+        (new $handler($this))->run();
     }
 
 
-    public function getCommandHandler($command): ?Command
+    public function getCommandHandler($command)
     {
-        $commands = static::getCommands();
-        return $commands[$command] ?? null;
+        return static::getCommands()[$command] ?? null;
     }
 
 
-    public function getTextHandler($text): ?Command
+    public function getTextHandler($text)
     {
-        foreach ($this->getMenu() as $menu) {
-            if ($text == $menu->label) {
-                return $this->getCommandHandler($menu->code);
-            }
-        }
-
         foreach (static::getCommands() as $command) {
             if ($text == $command::getTitle()) {
                 return $command;
+            }
+        }
+
+        foreach ($this->getMenu() as $menu) {
+            if ($text == $menu->label) {
+                return $this->getCommandHandler($menu->code);
             }
         }
 
