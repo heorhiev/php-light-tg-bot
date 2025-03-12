@@ -128,7 +128,7 @@ abstract class Bot
     public function getIncomeMessage(): IncomeMessage
     {
         if (!$this->_incomeMessage) {
-            $this->_incomeMessage = new IncomeMessage($this->_dataFromRequest);
+            $this->_incomeMessage = new IncomeMessage($this->_dataFromRequest, $this->getBotApi());
         }
 
         return $this->_incomeMessage;

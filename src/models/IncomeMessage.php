@@ -3,6 +3,8 @@
 namespace light\tg\bot\models;
 
 
+use TelegramBot\Api\BotApi;
+use TelegramBot\Api\Types\User;
 use TelegramBot\Api\Types\UserShared;
 
 class IncomeMessage
@@ -20,9 +22,13 @@ class IncomeMessage
     private $files;
     private $userShared;
 
+    private BotApi $api;
 
-    public function __construct($update)
+
+    public function __construct($update, BotApi $api)
     {
+        $this->api = $api;
+
         if ($update->getMessage()) {
             $this->mapMessage($update->getMessage());
         } elseif ($update->getCallbackQuery()) {
@@ -66,7 +72,7 @@ class IncomeMessage
     }
 
 
-    public function getFrom()
+    public function getFrom(): User
     {
         return $this->from;
     }
@@ -107,6 +113,12 @@ class IncomeMessage
     public function getUserShared()
     {
         return $this->userShared;
+    }
+
+
+    public function delete(): bool
+    {
+        return $this->api->deleteMessage($this->chat->getId(), $this->getId());
     }
 
 
