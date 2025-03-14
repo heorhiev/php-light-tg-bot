@@ -2,6 +2,7 @@
 
 namespace light\tg\bot;
 
+use light\module\vipCallBot\helpers\ButtonsHelper;
 use light\tg\bot\config\MenuDto;
 use light\tg\bot\config\TelegramDto;
 use light\app\services\SettingsService;
@@ -169,10 +170,20 @@ abstract class Bot
     }
 
 
-    public function sendMessage(Message $message, $acceptEdit = false, $closeCallback = true)
+    public function sendMessage(Message $message, $acceptEdit = false, $closeCallback = true, bool $deletePrevBotMessage = false)
     {
         if ($closeCallback && $this->getIncomeMessage()->isCallbackQuery()) {
             $this->answerCallbackQuery();
+        }
+
+
+        if ($deletePrevBotMessage && $this->getIncomeMessage()->getFrom()->isBot()) {
+            $this->getIncomeMessage()->delete();
+        }
+
+        $keyboardMarkup = $message->getKeyboardMarkup();
+        if (empty($keyboardMarkup)) {
+            $keyboardMarkup = ButtonsHelper::getDefaultMenuKeyboard($this->getUserId(), $this->getMenu());
         }
 
         if ($acceptEdit && $this->getIncomeMessage()->isEdited()) {
@@ -182,7 +193,7 @@ abstract class Bot
                 $message->getRenderedContent(),
                 'HTML',
                 true,
-                $message->getKeyboardMarkup()
+                $keyboardMarkup
             );
         } else {
             $this->getBotApi()->sendMessage(
@@ -191,7 +202,7 @@ abstract class Bot
                 'HTML',
                 true,
                 null,
-                $message->getKeyboardMarkup(),
+                $keyboardMarkup,
                 false,
                 $message->getMessageThreadId()
             );
